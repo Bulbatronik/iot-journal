@@ -1,0 +1,20 @@
+## Global configuration settings
+
+# Dataset parameters used across all models
+dataset:
+  path: 'data/aramis_train.csv'
+  num_features: 10
+  window_size: 20
+  stride: 5
+  delta_tau: 0
+  scale: True
+
+thr_select:
+  n_calls: 50
+  objective: auto
+  detection_mode: auto
+  min_consecutive: 1
+  optimize_min_consecutive: true
+  min_consecutive_bounds: [1, 200]
+  score_transform: auto
+  drift_window: 2000
