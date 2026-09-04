@@ -207,9 +207,6 @@ def reconstruct_dataset(
     Returns:
         dataset: Updated dataset object with reconstructed sequences
     """
-    # Scale the 'sens' column in the specific subset
-    dataset.scale_data(split=subset, column='sens')
-    
     ds = dataset.__getattribute__(f"df_{subset}")
     # Reconstruct each sequence in the dataframe
 

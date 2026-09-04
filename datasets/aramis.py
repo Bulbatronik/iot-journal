@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import logging
 from sklearn.model_selection import train_test_split, StratifiedKFold
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.utils import shuffle
 
 import torch
@@ -67,10 +66,6 @@ class AramisDataset:
         self.df_test = self._combine_client_split(index=2)
         self._truncate_training_data() # If train data has abnormal "tails", they will be removed
 
-        self.scaler = MinMaxScaler(feature_range=(-1, 1))
-        self.fit_scaler(split='train', column='sens')  # Fit scaler on training data
-        
-       
     def _load_and_preprocess_data(self):
         """Load and preprocess the raw data into a compact format."""
         df_raw = pd.read_csv(self.data_path)
@@ -289,35 +284,3 @@ class AramisDataset:
             'test_components': len(self.comp_test),
             #'x_train_shape': self.train_loader.dataset.tensors[0].shape
         }
-        
-    
-    def fit_scaler(self, split='train', column='sens'):
-        logger.info(f"Fitting scaler on {split} data...")
-        #self.scaler.fit(np.concatenate(self.df_train['sens'].values, axis=0))
-        self.scaler.fit(np.concatenate(self.__getattribute__(f'df_{split}')[column].values, axis=0))
-    
-    
-    def scale_data(self, split='train', column='sens'):
-        """Scale data using MinMaxScaler."""
-        
-        split = split.lower()
-        if split not in ['train', 'valid', 'test', 'valid_test']:
-            raise ValueError("split must be one of 'train', 'valid', 'test', or 'valid_test'")
-        
-        # 'sens' is timesteps x sensors
-        self.__getattribute__(f'df_{split}').loc[:, column] = self.__getattribute__(f'df_{split}')[column].apply(
-            lambda x: self.scaler.transform(x)
-        )
-        
-        
-    def inverse_scale(self, split='train', column='sens'):
-        """Inverse scale the data using MinMaxScaler."""
-        
-        split == split.lower()
-        if split not in ['train', 'valid', 'test']:
-            raise ValueError("split must be either 'train', 'valid' or 'test'")
-        
-        self.__getattribute__(f'df_{split}').loc[:, column] = self.__getattribute__(f'df_{split}')[column].apply(
-            lambda x: self.scaler.inverse_transform(x)
-        )
-        

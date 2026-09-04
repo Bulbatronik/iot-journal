@@ -7,7 +7,6 @@ dataset:
   window_size: 20
   stride: 5
   delta_tau: 0
-  scale: True
 
 thr_select:
   n_calls: 50
